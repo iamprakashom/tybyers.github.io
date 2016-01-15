@@ -3,28 +3,20 @@ layout: page
 title: About
 ---
 
-<p class="message">
-  Hey there! This page is included as an example. Feel free to customize it for your own use upon downloading. Carry on!
-</p>
+## Dreaming in Data?
 
-In the novel, *The Strange Case of Dr. Jeykll and Mr. Hyde*, Mr. Poole is Dr. Jekyll's virtuous and loyal butler. Similarly, Poole is an upstanding and effective butler that helps you build Jekyll themes. It's made by [@mdo](https://twitter.com/mdo).
+No really! I **do** dream in data! Not always, thankfully, but after a long day of coding, analyzing, and trying to make sense of data, I often have dreams (nightmares?) of code and data frames and moving/shifting/changing numbers. And then when I wake up, if my dreams were productive, I know how to solve that problem that I couldn't yesterday. And I'm excited to hit it again: [code](https://www.rstudio.com/), [visualize](http://ggplot2.org/), [analyze](https://www.r-project.org/), [craft a story](http://www.datasciencecentral.com/profiles/blogs/why-data-scientists-need-to-be-good-data-storytellers?utm_content=buffer5409e&utm_medium=social&utm_source=linkedin.com&utm_campaign=buffer)...repeat!
 
-There are currently two themes built on Poole:
+## Who Am I
+I'm [Tyler Byers](https://www.linkedin.com/in/tylerbyers), and I currently work as a Data Scientist doing energy forecasting for [Comverge, Inc](http://www.comverge.com/) in the wonderful city of [Denver, Colorado](https://www.thrillist.com/entertainment/denver/17-reasons-denver-is-the-best-city-anywhere). Ok, my official title is "Software Developer/Machine Learning," but really 90% of my job involves [getting dirty with data](http://www.nytimes.com/2014/08/18/technology/for-big-data-scientists-hurdle-to-insights-is-janitor-work.html?_r=0), with a little bit left over for writing about my findings and creating some production-level code for integration into the rest of our software.
 
-* [Hyde](http://hyde.getpoole.com)
-* [Lanyon](http://lanyon.getpoole.com)
+I have been doing data-related work for all of my career, including internships in college. I graduated from [The University of Arizona](http://www.arizona.edu/) (Bear Down Wildcats!) with a degree in [Engineering Mathematics](http://math.arizona.edu/academics/undergrads/requirements/majors/archive/bsem-2007) (NB: that linked catalog year was the closest one I could find to my graduation year; unfortunately the University cut the program after 2008 due to budget constraints).  After graduation, I spent almost a decade doing aerospace data analysis, in various forms, for the federal government. In 2015 I was ready for a new challenge and moved to Comverge.
 
-Learn more and contribute on [GitHub](https://github.com/poole).
+## Besides Data?
 
-## Setup
+When I'm not hacking on my Mac working on a data problem (or trying to decipher this website stuff!), you might find me:
 
-Some fun facts about the setup of this project include:
+  * Wheelchair racing on one of the many Denver bike trails, trying to stay in shape, [boost my brain power](http://www.active.com/fitness/articles/how-exercise-boosts-your-brainpower), and get some fresh air.  I had the great privilege to [represent the USA](http://www.teamusa.org/para-track-and-field/athletes/tyler-byers) at the 2004 and 2008 Paralympic Games. While my competition days have slowed down as I focus on other things in my life, I still treat my almost-daily lunchtime workouts as sacred, as it truly recharges me and helps my afternoon productivity.
+  * In the colder months, hitting the slopes in my sit-ski, mostly at [Keystone](http://www.keystoneresort.com/) or [Breck](http://www.breckenridge.com/).  Since 2013 I have shredded on a [KBG Lynx](http://enablingtech.com/products/kbg-lynx) built by the good people at [Enabling Technologies](http://enablingtech.com) here in Denver.
+  * Helping my wife raise our three young children (all under 5 as of 2015).  Mostly fun, very rewarding, but extremely hard work and frustrating at times!  
 
-* Built for [Jekyll](http://jekyllrb.com)
-* Developed on GitHub and hosted for free on [GitHub Pages](https://pages.github.com)
-* Coded with [Sublime Text 2](http://sublimetext.com), an amazing code editor
-* Designed and developed while listening to music like [Blood Bros Trilogy](https://soundcloud.com/maddecent/sets/blood-bros-series)
-
-Have questions or suggestions? Feel free to [open an issue on GitHub](https://github.com/poole/issues/new) or [ask me on Twitter](https://twitter.com/mdo).
-
-Thanks for reading!
