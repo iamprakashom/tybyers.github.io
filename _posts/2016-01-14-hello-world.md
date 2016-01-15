@@ -2,6 +2,7 @@
 layout: post
 title:  "Hello World!"
 date:   2016-01-14 21:53:00 -0600
+comments: true
 categories: update
 ---
 
