@@ -2,7 +2,7 @@
 layout: post
 title:  "Hello World!"
 date:   2016-01-14 21:53:00 -0600
-comments: true
+comments: True
 ---
 
 Just as the [Hello World program](https://en.wikipedia.org/wiki/%22Hello,_World!%22_program) is meant to introduce programmers to the basics of a new-to-the-noob programming language, this post is a break-the-ice post for me on my new blog.  I've thought about doing a blog for a long time. But, there's a lot of inertia to overcome when starting almost anything, and writing a blog is no different. I'm not usually described as lazy, but there was always a different MOOC to take, or LinkedIn post to read, or [Denver Broncos](http://www.denverbroncos.com/) game to watch, or one of my kids to chase. And sleep is important too -- I am not one of those people who functions well when I'm low on sleep!
