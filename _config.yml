@@ -28,6 +28,4 @@ gems: [jekyll-paginate]
 github:
   repo: https://github.com/tybyers/tybyers.github.io
 
-pages_list:
-  About: '/about'
-  Feed:  '/atom.xml'
+feed:  '/feed.xml'
