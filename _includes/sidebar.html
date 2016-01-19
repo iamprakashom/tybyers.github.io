@@ -1,6 +1,20 @@
+<!-- jQuery -->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script> 
+
+<script>
+if ( $(window).width() > 1150) {     
+  //Add your javascript for large screens here
+  document.write('<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox" checked>');
+}
+else {
+  //Add your javascript for small screens here
+  document.write('<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">');
+
+}
+</script>
+
 <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
      styles, `#sidebar-checkbox` for behavior. -->
-<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox" checked>
 
 <!-- Toggleable sidebar -->
 <div class="sidebar" id="sidebar">
