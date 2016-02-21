@@ -5,32 +5,32 @@ date:   2016-02-21 15:02:00 -0600
 comments: True
 ---
 
-Denver, Colorado is considered to be one of the most [bikeable cities in America](http://www.bizjournals.com/denver/news/2015/05/15/denver-among-top-10-most-bikeable-cities-heres-the.html). In addition to the fine bike lanes, bike trails, and mostly favorable weather ([300 days of sunshine](http://www.westword.com/news/colorados-300-days-of-sunshine-claim-its-a-myth-and-states-climatologist-tells-us-why-5875821), says the possibly dubious but sunny claim), Denver is also a [B-cycle city](https://www.bcycle.com/), with bicycle rental kiosks dotting the sidewalks near the city center.  For this short study, we obtained Denver's 2014 B-cycle trip data, and used it along with some other data sources to see if we could model hourly ridership across the Denver B-cycle network.  Our study indicated that most calendar and clock variables are highly significant when predicting ridership, and weather variables such as temperature and amount of cloud cover appear to be as well.  This document details how we obtained the data, how we merged data from different sources, shows some explorations of the data, and finally shows how we created our model of system ridership.
+Denver, Colorado is considered to be one of the most [bikeable cities in America](http://www.bizjournals.com/denver/news/2015/05/15/denver-among-top-10-most-bikeable-cities-heres-the.html). In addition to the fine bike lanes, bike trails, and mostly favorable weather ([300 days of sunshine](http://www.westword.com/news/colorados-300-days-of-sunshine-claim-its-a-myth-and-states-climatologist-tells-us-why-5875821), says the possibly dubious but sunny claim), Denver is also a [B-cycle city](https://www.bcycle.com/), with bicycle rental kiosks dotting the sidewalks near the city center.  For this short study, I obtained Denver's 2014 B-cycle trip data, and used it along with some other data sources to see if I could model hourly ridership across the Denver B-cycle network.  My study indicated that most calendar and clock variables are highly significant when predicting ridership, and weather variables such as temperature and amount of cloud cover appear to be as well.  This post details how I obtained the data, how I merged data from different sources, shows some explorations of the data, and finally shows how I created a regression model of system ridership.
 
 ##About B-cycle
 
-[B-cycle](https://en.wikipedia.org/wiki/B-cycle) is a public bicycle sharing company that operates in several cites, including Denver, Colorado.  The premise is that users may "checkout" a bike from a kiosk, which is usually along a city sidewalk, under various short- to long-term [access passes](https://denver.bcycle.com/pages-in-top-navigation/what-is-b-cycle/what-does-it-cost), depending on the user's preference and anticipated usage.  In Denver, most of the kiosks appear to have 10-20 "docks" where the bikes are stored until a user checks out the bike.  After a user checks out a bike, they ride it for as long as they wish, and then check it back in any B-cycle kiosk.  In 2014, Denver B-cycle operated 84 different kiosks, which are mostly clustered around the city center.  At the end of the year, B-cycle posts their yearly trip data as an Excel spreadsheet on their company webpage. We used these data, along with data from a few other sources, to conduct this study.  For more information, please see the [Denver B-cycle homepage](https://denver.bcycle.com/).
+[B-cycle](https://en.wikipedia.org/wiki/B-cycle) is a public bicycle sharing company that operates in several cites, including Denver, Colorado.  The premise is that users may "checkout" a bike from a kiosk, which is usually along a city sidewalk, under various short- to long-term [access passes](https://denver.bcycle.com/pages-in-top-navigation/what-is-b-cycle/what-does-it-cost), depending on the user's preference and anticipated usage.  In Denver, most of the kiosks appear to have 10-20 "docks" where the bikes are stored until a user checks out the bike.  After a user checks out a bike, they ride it for as long as they wish, and then check it back in any B-cycle kiosk.  In 2014, Denver B-cycle operated 84 different kiosks, which are mostly clustered around the city center.  At the end of the year, B-cycle posts their yearly trip data as an Excel spreadsheet on their company webpage. I used these data, along with data from a few other sources, to conduct this study.  For more information, please see the [Denver B-cycle homepage](https://denver.bcycle.com/).
 
 ##Data Acquisition and Merging
 
-For this report, we obtained data from several sources and combined the data together, taking the following steps.  Most of the initial data download and munging steps can be replicated by looking at the [exploring_bcycle_data.Rmd](https://github.com/tybyers/denver_bcycle/blob/master/exploring_bcycle_data.Rmd) file; most of these steps were too time-intensive to be carried out in a production-level script.
+For this report, I obtained data from several sources and combined the data together, taking the following steps.  Most of the initial data download and munging steps can be replicated by looking at the [exploring_bcycle_data.Rmd](https://github.com/tybyers/denver_bcycle/blob/master/exploring_bcycle_data.Rmd) file; most of these steps were too time-intensive to be carried out in a production-level script.
 
- 1. Downloaded B-cycle 2014 Trip Data from the [B-Cycle company information webpage](https://denver.bcycle.com/company). We did some date munging and changed variable names to ones that are more R-friendly. 
+ 1. Downloaded B-cycle 2014 Trip Data from the [B-Cycle company information webpage](https://denver.bcycle.com/company). I did some date munging and changed variable names to ones that are more R-friendly. 
  2. Obtained B-cycle kiosk data (kiosk name and address) by hand from the [Denver B-cycle homepage](https://denver.bcycle.com/).
- 3. Created a list of the 6800 combinations of checkout kiosk/return kiosk.  For each combination, we used the `mapdist` function from R's `ggmap` package to find the approximate bicycling distance and time between each kiosk. Because of the large number of one-way streets in the Denver downtown area, where the kiosks are highly clustered, we chose to find each checkout-return pair's distance separately, rather than finding a single distance for each pair regardless of direction of travel.  This process took three days, because the Google Distance Matrix API (which the `mapdist` function uses) only allows 2500 calls a day.
+ 3. Created a list of the 6800 combinations of checkout kiosk/return kiosk.  For each combination, I used the `mapdist` function from R's `ggmap` package to find the approximate bicycling distance and time between each kiosk. Because of the large number of one-way streets in the Denver downtown area, where the kiosks are highly clustered, I chose to find each checkout-return pair's distance separately, rather than finding a single distance for each pair regardless of direction of travel.  This process took three days, because the Google Distance Matrix API (which the `mapdist` function uses) only allows 2500 calls a day.
  4. Found the latitude and longitude for each station using the `geocode` function in the `ggmap` package. 
- 5. Obtained an API key from [forecast.io](https://developer.forecast.io/).  Within R, in our exploratory `Rmd` file, we wrote a function to download the weather data from forecast.io.  Each day's hourly data comes in a separate JSON file; we saved each JSON file to a directory.
- 6. Within the production script, we merged different parts of the above data in different ways, depending on the specific task goals.  The final merging was to merge aggregated hourly checkout data with the hourly weather data.
+ 5. Obtained an API key from [forecast.io](https://developer.forecast.io/).  Within R, in my exploratory `Rmd` file, I wrote a function to download the weather data from forecast.io.  Each day's hourly data comes in a separate JSON file; I saved each JSON file to a directory.
+ 6. Within the production script, I merged different parts of the above data in different ways, depending on the specific task goals.  The final merging was to merge aggregated hourly checkout data with the hourly weather data.
  
 ###A Note about Holidays
-For our study, we factored in City of Denver observed holidays.  Denver city celebrates all the same holidays as the federal holidays, with the following exception: Columbus Day is not a city holiday, and is replaced by Cesar Chavez Day, usually in late March.  We only factored in the major [federal holidays](https://www.opm.gov/policy-data-oversight/snow-dismissal-procedures/federal-holidays/#url=2014) that result in government and bank closures (with the exception above), and not the lesser holidays. 
+For my study, I factored in City of Denver observed holidays.  Denver city celebrates all the same holidays as the federal holidays, with the following exception: Columbus Day is not a city holiday, and is replaced by Cesar Chavez Day, usually in late March.  I only factored in the major [federal holidays](https://www.opm.gov/policy-data-oversight/snow-dismissal-procedures/federal-holidays/#url=2014) that result in government and bank closures (with the exception above), and not the lesser holidays. 
 
 ##Basic Ridership Statistics
 
 ### Number of Rides
 The B-cycle data, as downloaded, contains 377,229 rows of "trip data." Nominally, this means that 377,229 B-cycle trips were taken in 2014.  Indeed, the [2014 Denver B-cycle annual report](https://denver.bcycle.com/docs/librariesprovider34/default-document-library/annual-reports/2014-denver-bike-sharing-annual-report.pdf?sfvrsn=2) claims this to be the number of rides for the year.
 
-However, over 1% of the rides (4279 rides) have the same checkout station as return station with a trip duration of only 1 minute (see Figure 1 below).  We believe these should be filtered out because we believe the majority of these "rides" are likely people checking out a bike, and then deciding after a very short time that this particular bike doesn't work for them.  We believe that most of the same-kiosk rides under 5 minutes or so likely shouldn't count, but we only culled the ones that were one minute long.
+However, over 1% of the rides (4279 rides) have the same checkout station as return station with a trip duration of only 1 minute (see Figure 1 below).  I believe these should be filtered out because I believe the majority of these "rides" are likely people checking out a bike, and then deciding after a very short time that this particular bike doesn't work for them.  I believe that most of the same-kiosk rides under 5 minutes or so likely shouldn't count, but only culled the ones that were one minute long.
 
 <img class='figure' src='https://raw.githubusercontent.com/tybyers/denver_bcycle/master/figures/duration_same_kiosk.png'>
 
@@ -38,13 +38,13 @@ However, over 1% of the rides (4279 rides) have the same checkout station as ret
 <br>
 
 
-We also filtered out 258 rides with an "invalid return" station. This could be any number of things, but since finding nominal distance for these rides is very difficult, we filtered these out as well.
+I also filtered out 258 rides with an "invalid return" station. This could be any number of things, but since finding nominal distance for these rides is very difficult, I filtered these out as well.
 
-With the above, we arrived at an estimate of **372,684 B-cycle rides in 2014**.
+With the above, I arrived at an estimate of **372,684 B-cycle rides in 2014**.
 
 ### Distance Traveled
 
-As mentioned in bullet #3 in the Data Acquisition section, we used a Google Maps API in the `ggmap` package to derive the between-station distance for each station pair and then for each ride.  Because a large number of rides were returning to the same kiosk, meaning the minimum distance ridden cannot be estimated by Google Maps, we estimated the distance ridden by calculating the average speed of all the other rides (nominal distance ridden divided by the duration), and then applying this average speed to the same-kiosk trip durations, capping the trips at an arbitrary 5 miles.  While it's likely we are underestimating the total distance ridden by a fair amount (perhaps 25%), since many riders will not take the straight-line distance between two stations (especially tourists/non-commuters), we estimate riders rode **at least 616,960 miles** on B-cycle in 2014, with a more likely number 25% higher at 771,200 miles.
+As mentioned in bullet #3 in the Data Acquisition section, I used a Google Maps API in the `ggmap` package to derive the between-station distance for each station pair and then for each ride.  Because a large number of rides were returning to the same kiosk, meaning the minimum distance ridden cannot be estimated by Google Maps, I estimated the distance ridden by calculating the average speed of all the other rides (nominal distance ridden divided by the duration), and then applying this average speed to the same-kiosk trip durations, capping the trips at an arbitrary 5 miles.  While it's likely I am underestimating the total distance ridden by a fair amount (perhaps 25%), since many riders will not take the straight-line distance between two stations (especially tourists/non-commuters), I estimate riders rode **at least 616,960 miles** on B-cycle in 2014, with a more likely number 25% higher at 771,200 miles.
 
 ###Most Popular and Least Popular Kiosks
 
@@ -84,7 +84,7 @@ Colfax & Garfield               1989
 
 #### Map of Station Popularity
 
-We used the `ggmap` package to create the following map showing the popularity of the various checkout kiosks (Figure 2). The size of the circle is proportional to the number of checkouts from that kiosk in 2014.
+I used the `ggmap` package to create the following map showing the popularity of the various checkout kiosks (Figure 2). The size of the circle is proportional to the number of checkouts from that kiosk in 2014.
 
 <img class='figure' src='https://raw.githubusercontent.com/tybyers/denver_bcycle/master/figures/checkout_kiosk_map.png'>
 
@@ -106,9 +106,9 @@ Not Applicable                               4490
 ## Ridership by Calendar and Clock Variables
 
 ### Ridership by Hour
-To dive a little deeper into the data, we aggregated the data by taking the total number of bike checkouts for each hour of the year.  All checkouts in a given hour were assigned to that specific hour (i.e. a checkout at 6:02 AM and a checkout at 6:56 AM both count as a checkout in the 6 AM hour).
+To dive a little deeper into the data, I aggregated the data by taking the total number of bike checkouts for each hour of the year.  All checkouts in a given hour were assigned to that specific hour (i.e. a checkout at 6:02 AM and a checkout at 6:56 AM both count as a checkout in the 6 AM hour).
 
-We then totaled the number of checkouts in a given hour of the day -- summing up over the entire year (so the 10 AM sum is the total number of riders checking out a bike in the 10 AM hour for the 365 days in 2014).  Figure 3 below shows the total number of bike checkouts for each hour of the day, and Figure 4 shows the estimated distance ridden given the hour of checkout.
+I then totaled the number of checkouts in a given hour of the day -- summing up over the entire year (so the 10 AM sum is the total number of riders checking out a bike in the 10 AM hour for the 365 days in 2014).  Figure 3 below shows the total number of bike checkouts for each hour of the day, and Figure 4 shows the estimated distance ridden given the hour of checkout.
 
 <img class='figure' src='https://raw.githubusercontent.com/tybyers/denver_bcycle/master/figures/checkouts_by_hourofday.png'>
 
@@ -124,7 +124,7 @@ These figures show that most bike checkouts occur during the 4 PM and 5 PM hours
 
 ### Ridership by Hour and Weekday
 
-We also looked to see if the above patterns held true each day of the week, or if the patterns were perhaps different on the weekend.  Indeed, as Figure 5 below shows, the weekday patterns (days 2-6) are all fairly similar; the weekend patterns show a significantly different shape, with usage peaks occuring between 1 PM and 3 PM.
+I also looked to see if the above patterns held true each day of the week, or if the patterns were perhaps different on the weekend.  Indeed, as Figure 5 below shows, the weekday patterns (days 2-6) are all fairly similar; the weekend patterns show a significantly different shape, with usage peaks occuring between 1 PM and 3 PM.
 
 <img class='figure' src='https://raw.githubusercontent.com/tybyers/denver_bcycle/master/figures/numcheckouts_by_hourofday_perweekday.png'>
 
@@ -133,7 +133,7 @@ We also looked to see if the above patterns held true each day of the week, or i
 
 ###Ridership by Month
 
-Another calendar factor we explored was the number of checkouts by month.  Unsurprisingly, as Figure 6 shows, most bike checkouts occur during the summer months of June through August, and the fewest checkouts occur during the winter.
+Another calendar factor I explored was the number of checkouts by month.  Unsurprisingly, as Figure 6 shows, most bike checkouts occur during the summer months of June through August, and the fewest checkouts occur during the winter.
 
 <img class='figure' src='https://raw.githubusercontent.com/tybyers/denver_bcycle/master/figures/totalcheckouts_bymonth.png'>
 
@@ -142,22 +142,22 @@ Another calendar factor we explored was the number of checkouts by month.  Unsur
 
 ## Merging with Weather
 
-After looking at ridership as it relates to calendar and clock variables, we merged the data with hourly historical weather data.  Our hypothesis, based on observations of bicycle riding around Denver, is that in addition to ridership being affected by the time of day, ridership is *also* affected by the weather. We would likely expect more riders on warmer days (the monthly ridership statistics may be a proxy for this).
+After looking at ridership as it relates to calendar and clock variables, I merged the data with hourly historical weather data.  My hypothesis, based on observations of bicycle riding around Denver, is that in addition to ridership being affected by the time of day, ridership is *also* affected by the weather. We would likely expect more riders on warmer days (the monthly ridership statistics may be a proxy for this).
 
 ### Checkouts vs. Temperature
 
-One variable we plotted is the number of bike checkouts versus the temperature (Figure 7 below).  We noted that the relationship between numbers of riders and temperature appeared to follow curve, rather than just a straight line.  We fit a [loess curve](http://www.inside-r.org/r-doc/stats/loess) in our plotting software to visualize the curve; based on this, in our linear regression in the next section, we used temperature *and* temperature squared for our linear model fit.
+One variable I plotted is the number of bike checkouts versus the temperature (Figure 7 below).  I noted that the relationship between numbers of riders and temperature appeared to follow curve, rather than just a straight line.  I fit a [loess curve](http://www.inside-r.org/r-doc/stats/loess) in `ggplot` to visualize the curve; based on this, in my linear regression in the next section, I used temperature *and* temperature squared for my linear model fit.
 
 <img class='figure' src='https://raw.githubusercontent.com/tybyers/denver_bcycle/master/figures/checkouts_vs_temperature.png'>
 
 <div class='caption'>Figure 7: Checkouts vs. Temperature with Fitted LOESS</div>
 <br>
 
-In our linear model, we also considered humidity levels and cloud cover levels.
+In my linear model, I also considered humidity levels and cloud cover levels.
 
 ### Days with Highest/Lowest Ridership
 
-We also found the 10 days with the highest total number of rides, as well as the 10 days with the fewest number of rides.  See tables below.  Unsurprisingly, the days with highest ridership were mostly warm (but not overly hot) weekend days, and the days with the least ridership were cold weekend days.  One reason for this effect may be that people who commute to/from work via B-cycle may be less affected by the weather in their decision to ride, while the "weekend warriors" who rent the B-cycles for pleasure are highly affected by the weather in their decision to ride.
+I also found the 10 days with the highest total number of rides, as well as the 10 days with the fewest number of rides.  See tables below.  Unsurprisingly, the days with highest ridership were mostly warm (but not overly hot) weekend days, and the days with the least ridership were cold weekend days.  One reason for this effect may be that people who commute to/from work via B-cycle may be less affected by the weather in their decision to ride, while the "weekend warriors" who rent the B-cycles for pleasure are highly affected by the weather in their decision to ride.
 
 #### Highest Ridership Days
 {% highlight r %}
@@ -197,16 +197,16 @@ Source: local data frame [10 x 5]
 
 ##Linear Model
 
-Our final task in this short study was to attempt to create a linear regression model using a number of calendar variables and weather variables.
+My final task in this short study was to attempt to create a linear regression model using a number of calendar variables and weather variables.
 
 ### Setting Up Input Variables
-To create this model, we forced the calendar variables to be "factor" variables.  For example, it makes little sense to treat the months as actual integers -- the integers denoting the months are stand-ins for the months' names.  Similarly, because peoples' schedules do not follow a linear trajectory throughout the day, despite the increasing hours (the activity levels are more sinusoidal), it makes more sense to treat hour variables as individual factors.  Likewise for weekday factors.  We also have holiday factors -- either 1 for holiday or 0 for not a holiday.
+To create this model, I forced the calendar variables to be "factor" variables.  For example, it makes little sense to treat the months as actual integers -- the integers denoting the months are stand-ins for the months' names.  Similarly, because peoples' schedules do not follow a linear trajectory throughout the day, despite the increasing hours (the activity levels are more sinusoidal), it makes more sense to treat hour variables as individual factors.  Likewise for weekday factors.  I also have holiday factors -- either 1 for holiday or 0 for not a holiday.
 
-For the weather variables, we have temperature *and* temperature squared, since the ridership vs. temperature is not a straight linear relationship. We also used humidity (values between 0 and 1.0), and cloud cover (values between 0 and 1.0).
+For the weather variables, I have temperature *and* temperature squared, since the ridership vs. temperature is not a straight linear relationship. I also used humidity (values between 0 and 1.0), and cloud cover (values between 0 and 1.0).
 
 ### Model Output
 
-Using the above inputs, we created a linear model.  A summary of the linear fit shows the following output.  An interpretation follows in the next section.
+Using the above inputs, I created a linear model.  A summary of the linear fit shows the following output.  An interpretation follows in the next section.
 
 {% highlight r %}
 
@@ -277,7 +277,7 @@ F-statistic:   546 on 45 and 8714 DF,  p-value: < 2.2e-16
 
 ### Model Findings
 
-We have a few intepretations of the above model:
+I have a few intepretations of the above model:
 
  * The R-squared statistic of 0.7382 means that approximately 73.8% of the variation in the hourly ridership can be explained by the chosen variables and model.  
  * The residual standard error of 23.78 means that, for each hour, about 2/3 of the time the model will predict total system ridership within plus or minus 23.78 riders.  
@@ -294,21 +294,21 @@ We have a few intepretations of the above model:
 
 ##Summary
 
-Based on our short study of 2014 Denver B-cycle trip data, we found that we can create a linear model of trip ridership based on several calendar and clock variables merged with basic weather data.  Our study focused on total system ridership, on an hourly basis, rather than modeling specific checkout or return kiosks.  Most calendar variables are highly significant when predicting ridership, and weather variables such as temperature and amount of cloud cover appear to be as well. Based on R-squared, approximately 73.8% of the variation in hourly ridership can be explained by our simple model. 
+Based on my short study of 2014 Denver B-cycle trip data, I found that we can create a linear model of trip ridership based on several calendar and clock variables merged with basic weather data.  My study focused on total system ridership, on an hourly basis, rather than modeling specific checkout or return kiosks.  Most calendar variables are highly significant when predicting ridership, and weather variables such as temperature and amount of cloud cover appear to be as well. Based on R-squared, approximately 73.8% of the variation in hourly ridership can be explained by the simple model. 
 
 ### Additional Areas of Study
 
-We have many more ideas of ways that we could study this data, which we did not have time for in this particular project.  The following are some of these ideas:
+I have many more ideas of ways that we could study this data, which I did not have time for in this particular project.  The following are some of these ideas:
 
  * Graph analysis -- Which checkout/return kiosk routes most heavily used  
  * Kiosk predictive analytics -- How to optimize the distribution of bikes at kiosks to make sure there are enough?  
  * Find a better method of predicting distances ridden.  
  * Trend analysis of ridership over more years than just 2014 -- how is the program growing, and can we predict its growth in the near future?  
  * Break down hourly data into 15-minute increments for finer-grain resolution of ridership data -- do we see a spike just before or just after the top of the hour during commuting times?  
- * Used autoregressive weather variables (like "lagged" temperature variables). Perhaps people may be less likely to use a B-cycle today if yesterday was very cold (even if today's a bit warmer -- but perhaps the opposite is true!).  
+ * Use autoregressive weather variables (like "lagged" temperature variables). Perhaps people may be less likely to use a B-cycle today if yesterday was very cold (even if today's a bit warmer -- but perhaps the opposite is true!).  
  * Model "interactions" between variables in the linear model.  As it is, the variables are being modeled individually; however, there are likely significant interactions between variables that we should model (for instance, 75 degrees at 10 AM is different than 75 degrees at 9 PM with respect to ridership).  
  * Actually use some machine learning techniques to see if we can produce better predictions than the linear model, and test with training/validation/testing sets.  I believe that if we tested some decision-tree methods (such as random forests or gbms), that we could likely get much higher predictive power than the linear model can give us.  
 
 ## About this Project, Source Code
 
-I originally completed this project in August 2015 as my final project for University of Washington's Methods for Data Analysis class, course #2 of 3 in the Data Science Certificate program.  Source code for the analysis, in addition to other project files and data, can be found in my [denver_bcycle repo](https://github.com/tybyers/denver_bcycle) on GitHub.
+I originally completed this project in August 2015 as my final project for University of Washington's Methods for Data Analysis class, course #2 of 3 in the Data Science Certificate program.  This blog post has only been slightly modified from my assignment submission.  Source code for the analysis, in addition to other project files and data, can be found in my [denver_bcycle repo](https://github.com/tybyers/denver_bcycle) on GitHub.
