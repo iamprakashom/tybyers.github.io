@@ -23,6 +23,7 @@ For this report, I obtained data from several sources and combined the data toge
  6. Within the production script, I merged different parts of the above data in different ways, depending on the specific task goals.  The final merging was to merge aggregated hourly checkout data with the hourly weather data.
  
 ### A Note about Holidays
+
 For my study, I factored in City of Denver observed holidays.  Denver city celebrates all the same holidays as the federal holidays, with the following exception: Columbus Day is not a city holiday, and is replaced by Cesar Chavez Day, usually in late March.  I only factored in the major [federal holidays](https://www.opm.gov/policy-data-oversight/snow-dismissal-procedures/federal-holidays/#url=2014) that result in government and bank closures (with the exception above), and not the lesser holidays. 
 
 ## Basic Ridership Statistics
@@ -160,6 +161,7 @@ In my linear model, I also considered humidity levels and cloud cover levels.
 I also found the 10 days with the highest total number of rides, as well as the 10 days with the fewest number of rides.  See tables below.  Unsurprisingly, the days with highest ridership were mostly warm (but not overly hot) weekend days, and the days with the least ridership were cold weekend days.  One reason for this effect may be that people who commute to/from work via B-cycle may be less affected by the weather in their decision to ride, while the "weekend warriors" who rent the B-cycles for pleasure are highly affected by the weather in their decision to ride.
 
 #### Highest Ridership Days
+
 {% highlight r %}
 [1] "Top 5 Days by Total Number of Checkouts:"
 Source: local data frame [10 x 5]
@@ -178,6 +180,7 @@ Source: local data frame [10 x 5]
 {% endhighlight %}
 
 #### Lowest Ridership Days
+
 {% highlight r %}
 [1] "Top 5 Days by Fewest Number of Checkouts:"
 Source: local data frame [10 x 5]
@@ -200,6 +203,7 @@ Source: local data frame [10 x 5]
 My final task in this short study was to attempt to create a linear regression model using a number of calendar variables and weather variables.
 
 ### Setting Up Input Variables
+
 To create this model, I forced the calendar variables to be "factor" variables.  For example, it makes little sense to treat the months as actual integers -- the integers denoting the months are stand-ins for the months' names.  Similarly, because peoples' schedules do not follow a linear trajectory throughout the day, despite the increasing hours (the activity levels are more sinusoidal), it makes more sense to treat hour variables as individual factors.  Likewise for weekday factors.  I also have holiday factors -- either 1 for holiday or 0 for not a holiday.
 
 For the weather variables, I have temperature *and* temperature squared, since the ridership vs. temperature is not a straight linear relationship. I also used humidity (values between 0 and 1.0), and cloud cover (values between 0 and 1.0).
