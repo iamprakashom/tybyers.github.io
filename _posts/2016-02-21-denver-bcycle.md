@@ -7,11 +7,11 @@ comments: True
 
 Denver, Colorado is considered to be one of the most [bikeable cities in America](http://www.bizjournals.com/denver/news/2015/05/15/denver-among-top-10-most-bikeable-cities-heres-the.html). In addition to the fine bike lanes, bike trails, and mostly favorable weather ([300 days of sunshine](http://www.westword.com/news/colorados-300-days-of-sunshine-claim-its-a-myth-and-states-climatologist-tells-us-why-5875821), says the possibly dubious but sunny claim), Denver is also a [B-cycle city](https://www.bcycle.com/), with bicycle rental kiosks dotting the sidewalks near the city center.  For this short study, I obtained Denver's 2014 B-cycle trip data, and used it along with some other data sources to see if I could model hourly ridership across the Denver B-cycle network.  My study indicated that most calendar and clock variables are highly significant when predicting ridership, and weather variables such as temperature and amount of cloud cover appear to be as well.  This post details how I obtained the data, how I merged data from different sources, shows some explorations of the data, and finally shows how I created a regression model of system ridership.
 
-##About B-cycle
+## About B-cycle
 
 [B-cycle](https://en.wikipedia.org/wiki/B-cycle) is a public bicycle sharing company that operates in several cites, including Denver, Colorado.  The premise is that users may "checkout" a bike from a kiosk, which is usually along a city sidewalk, under various short- to long-term [access passes](https://denver.bcycle.com/pages-in-top-navigation/what-is-b-cycle/what-does-it-cost), depending on the user's preference and anticipated usage.  In Denver, most of the kiosks appear to have 10-20 "docks" where the bikes are stored until a user checks out the bike.  After a user checks out a bike, they ride it for as long as they wish, and then check it back in any B-cycle kiosk.  In 2014, Denver B-cycle operated 84 different kiosks, which are mostly clustered around the city center.  At the end of the year, B-cycle posts their yearly trip data as an Excel spreadsheet on their company webpage. I used these data, along with data from a few other sources, to conduct this study.  For more information, please see the [Denver B-cycle homepage](https://denver.bcycle.com/).
 
-##Data Acquisition and Merging
+## Data Acquisition and Merging
 
 For this report, I obtained data from several sources and combined the data together, taking the following steps.  Most of the initial data download and munging steps can be replicated by looking at the [exploring_bcycle_data.Rmd](https://github.com/tybyers/denver_bcycle/blob/master/exploring_bcycle_data.Rmd) file; most of these steps were too time-intensive to be carried out in a production-level script.
 
@@ -22,10 +22,10 @@ For this report, I obtained data from several sources and combined the data toge
  5. Obtained an API key from [forecast.io](https://developer.forecast.io/).  Within R, in my exploratory `Rmd` file, I wrote a function to download the weather data from forecast.io.  Each day's hourly data comes in a separate JSON file; I saved each JSON file to a directory.
  6. Within the production script, I merged different parts of the above data in different ways, depending on the specific task goals.  The final merging was to merge aggregated hourly checkout data with the hourly weather data.
  
-###A Note about Holidays
+### A Note about Holidays
 For my study, I factored in City of Denver observed holidays.  Denver city celebrates all the same holidays as the federal holidays, with the following exception: Columbus Day is not a city holiday, and is replaced by Cesar Chavez Day, usually in late March.  I only factored in the major [federal holidays](https://www.opm.gov/policy-data-oversight/snow-dismissal-procedures/federal-holidays/#url=2014) that result in government and bank closures (with the exception above), and not the lesser holidays. 
 
-##Basic Ridership Statistics
+## Basic Ridership Statistics
 
 ### Number of Rides
 The B-cycle data, as downloaded, contains 377,229 rows of "trip data." Nominally, this means that 377,229 B-cycle trips were taken in 2014.  Indeed, the [2014 Denver B-cycle annual report](https://denver.bcycle.com/docs/librariesprovider34/default-document-library/annual-reports/2014-denver-bike-sharing-annual-report.pdf?sfvrsn=2) claims this to be the number of rides for the year.
@@ -46,7 +46,7 @@ With the above, I arrived at an estimate of **372,684 B-cycle rides in 2014**.
 
 As mentioned in bullet #3 in the Data Acquisition section, I used a Google Maps API in the `ggmap` package to derive the between-station distance for each station pair and then for each ride.  Because a large number of rides were returning to the same kiosk, meaning the minimum distance ridden cannot be estimated by Google Maps, I estimated the distance ridden by calculating the average speed of all the other rides (nominal distance ridden divided by the duration), and then applying this average speed to the same-kiosk trip durations, capping the trips at an arbitrary 5 miles.  While it's likely I am underestimating the total distance ridden by a fair amount (perhaps 25%), since many riders will not take the straight-line distance between two stations (especially tourists/non-commuters), I estimate riders rode **at least 616,960 miles** on B-cycle in 2014, with a more likely number 25% higher at 771,200 miles.
 
-###Most Popular and Least Popular Kiosks
+### Most Popular and Least Popular Kiosks
 
 #### Most Popular
 
@@ -131,7 +131,7 @@ I also looked to see if the above patterns held true each day of the week, or if
 <div class='caption'> Figure 5: Checkouts by Hour of Day per Weekday</div>
 <br>
 
-###Ridership by Month
+### Ridership by Month
 
 Another calendar factor I explored was the number of checkouts by month.  Unsurprisingly, as Figure 6 shows, most bike checkouts occur during the summer months of June through August, and the fewest checkouts occur during the winter.
 
@@ -195,7 +195,7 @@ Source: local data frame [10 x 5]
 10 2014-04-13              75    46.68    20.79   Sunday
 {% endhighlight %}
 
-##Linear Model
+## Linear Model
 
 My final task in this short study was to attempt to create a linear regression model using a number of calendar variables and weather variables.
 
