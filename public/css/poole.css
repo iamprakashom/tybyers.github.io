@@ -113,6 +113,10 @@ strong {
   color: #303030;
 }
 
+/* Body links */
+p a {
+   color: #288EAD !important;
+}
 
 /* Lists */
 ul, ol, dl {
