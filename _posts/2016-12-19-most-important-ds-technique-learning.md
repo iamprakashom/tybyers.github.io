@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Most Important Data Science Skill? How to Learn New Skills, Perhaps"
+title: "Most Important Data Science Skill? (Re)learning to Learn, Perhaps"
 date: 2016-12-19 10:34:00 -0700
 comments: True
 excerpt_separator: <!--more-->
