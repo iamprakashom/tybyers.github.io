@@ -3,11 +3,14 @@ layout: post
 title: "Most Important Data Science Skill? How to Learn New Skills, Perhaps"
 date: 2016-12-19 10:34:00 -0700
 comments: True
+excerpt_separator: <!--more-->
 ---  
 
 "What, in your opinion, is the most important skill for data scientists to have?"
 
 Fortunately, I had a minute to think. I was one of four data scientist panelists, talking to a meetup group of mostly aspiring data scientists, about how to get into the profession and how to be successful.  I was on the opposite end from the microphone, so I had a few minutes to gather my thoughts while the other panelists answered. 
+
+<!--more-->
 
 My mind raced: so many things a data scientist needs to know.  What is the most important? Do you need to know R? Or Python? Data wrangling and analysis? Machine learning? Visualization? Hadoop or Spark? 
 
